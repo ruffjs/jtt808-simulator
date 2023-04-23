@@ -61,7 +61,7 @@ public class SimpleDriveTask extends AbstractDriveTask
 
         // 总行驶里程初始化
         Object km = getParameter("mileages");
-        if (km != null)
+        if (km != null && km != "null")
         {
             int meters = Integer.parseInt(String.valueOf(km)) * 1000;
             mileages = meters;
