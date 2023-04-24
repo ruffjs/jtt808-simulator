@@ -81,7 +81,7 @@
                     formatter: function (i, v, r)
                     {
                         var html = '';
-                        html += '<a href="javascript:;" class="btn btn-sm btn-blue">编辑</a>';
+                        // html += '<a href="javascript:;" class="btn btn-sm btn-blue">编辑</a>';
                         html += '<a href="javascript:;" onclick="remove(\'' + v + '\')" class="btn btn-sm btn-orange">删除</a>';
                         return html;
                     }
