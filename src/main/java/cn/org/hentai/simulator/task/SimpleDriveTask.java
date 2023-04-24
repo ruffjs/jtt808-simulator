@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -117,6 +118,15 @@ public class SimpleDriveTask extends AbstractDriveTask
         // TODO: 应该整个hashmap保存上一次发送的消息ID，KEY为流水号
         switch (lastSentMessageId)
         {
+            case 0x0102:
+                //  认证成功
+                if (result == 0) {
+                    logger.info("auth success");
+                    startSession();
+                } else {
+                    logger.error("auth failed");
+                }
+                break;
             // 其它就不管了
         }
 
@@ -131,7 +141,9 @@ public class SimpleDriveTask extends AbstractDriveTask
         if (result == 0x00)
         {
             log(LogType.INFO, "registered");
-            startSession();
+            byte[] authCode = Arrays.copyOfRange(msg.body, 3, msg.body.length);
+
+            sendAuth(new String(authCode));
         }
         else
         {
@@ -171,6 +183,17 @@ public class SimpleDriveTask extends AbstractDriveTask
         // 回应一下
         GENERAL_RESPONSE.body = Packet.create(5).addShort((short) msg.sequence).addShort((short) msg.id).addByte((byte) 0x00).getBytes();
         send(GENERAL_RESPONSE);
+    }
+
+    protected void sendAuth(String authCode) {
+        byte[] bytes = authCode.getBytes();
+        JTT808Message msg = new JTT808Message();
+        msg.id = 0x0102;
+        msg.body = Packet.create(bytes.length)
+                .addBytes(bytes)
+                .getBytes();
+
+        send(msg);
     }
 
     // 开始正常会话，发送心跳与位置
