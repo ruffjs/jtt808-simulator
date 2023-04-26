@@ -46,13 +46,13 @@
         </div>
         <div class="x-row">
             <div class="x-col-2 text-right">车牌号：</div>
-            <div class="x-col-2"><input type="text" name="vehicleNumberPattern" id="vehicleNumberPattern" placeholder="如：京%06d" value="京%06d" /></div>
+            <div class="x-col-2"><input type="text" name="vehicleNumberPattern" id="vehicleNumberPattern" placeholder="如：测%06d" value="测%06d" /></div>
             <div class="x-col-4"><span class="x-hint">如<strong>%06d</strong>表示六个数字，左侧补0，从0~车辆数量的序号生成车牌号</span></div>
             <div class="x-clearfix"></div>
         </div>
         <div class="x-row">
             <div class="x-col-2 text-right">终端ID：</div>
-            <div class="x-col-2"><input type="text" name="deviceSnPattern" id="deviceSnPattern" placeholder="如：A%06d" value="A%06d" /></div>
+            <div class="x-col-2"><input type="text" name="deviceSnPattern" id="deviceSnPattern" placeholder="如：T%06d" value="T%06d" /></div>
             <div class="x-clearfix"></div>
         </div>
         <div class="x-row">

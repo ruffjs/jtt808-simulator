@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 日志输出格式 -->
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"/>
+
+    <!-- 开发环境变量:dev-->
+    <springProfile name="dev,test,local,default">
+        <property name="LOG_HOME" value="./logs"/>
+        <logger name="com.xiaozhen" level="DEBUG"/>
+        <!-- 日志输出到控制台！ -->
+        <appender name="LOGOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
+        <!-- 日志输出到文件！ -->
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <!--日志文件输出的文件名 -->
+                <FileNamePattern>${LOG_HOME}/jtt808_%d{yyyy-MM-dd}.%i.log.gz
+                </FileNamePattern>
+                <!--日志文件保留天数 -->
+                <maxFileSize>100MB</maxFileSize>
+                <MaxHistory>30</MaxHistory>
+                <totalSizeCap>2GB</totalSizeCap>
+            </rollingPolicy>
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
+        <root level="INFO">
+            <appender-ref ref="LOGOUT"/>
+            <appender-ref ref="FILE"/>
+        </root>
+    </springProfile>
+
+</configuration>

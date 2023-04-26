@@ -1,5 +1,8 @@
 package cn.org.hentai.simulator.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by matrixy when 2018/4/14.
  * 字节块读写工具类
@@ -7,6 +10,9 @@ package cn.org.hentai.simulator.util;
  */
 public class Packet
 {
+
+    static Logger logger = LoggerFactory.getLogger(Packet.class);
+
     int size = 0;
     int offset = 0;
     int maxSize = 0;
@@ -211,6 +217,9 @@ public class Packet
     public byte[] nextBytes(int length)
     {
         length = Math.min(length, size - offset);
+        if (length <= 0 ) {
+            logger.error("======> negative len: {}, body: {}", length, this.data);
+        }
         byte[] buf = new byte[length];
         System.arraycopy(this.data, offset, buf, 0, length);
         offset += length;

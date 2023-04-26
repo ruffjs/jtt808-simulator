@@ -31,7 +31,7 @@ public class TaskTest
         AbstractDriveTask[] tasks = new SimpleDriveTask[CONCURRENT];
         for (int i = 0; i < CONCURRENT; i++)
         {
-            settings.put("vehicle.number", String.format("京%06d", i));
+            settings.put("vehicle.number", String.format("测%06d", i));
             settings.put("device.sn", String.format("%07d", i));
             settings.put("device.sim", String.format("0138%08d", i));
 
