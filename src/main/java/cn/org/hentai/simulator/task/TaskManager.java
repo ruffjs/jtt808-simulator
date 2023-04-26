@@ -17,9 +17,11 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * 行程任务管理器
  */
-public final class TaskManager
-{
+public final class TaskManager {
     static Logger logger = LoggerFactory.getLogger(TaskManager.class);
+
+    private static int reportInterval = 5;
+
 
     Object lock;
     // TODO: map的value是无序的，不好做分页，得想个办法
@@ -27,11 +29,9 @@ public final class TaskManager
     AtomicLong sequence;
     AtomicLong index;
 
-    static final Comparator<AbstractDriveTask> SORT_COMPARATOR = new Comparator<AbstractDriveTask>()
-    {
+    static final Comparator<AbstractDriveTask> SORT_COMPARATOR = new Comparator<AbstractDriveTask>() {
         @Override
-        public int compare(AbstractDriveTask o1, AbstractDriveTask o2)
-        {
+        public int compare(AbstractDriveTask o1, AbstractDriveTask o2) {
             long x = o1.getId() - o2.getId();
             if (x > 0) return 1;
             else if (x == 0) return 0;
@@ -39,8 +39,11 @@ public final class TaskManager
         }
     };
 
-    private TaskManager()
-    {
+    public static void setReportInterval(int interval) {
+        reportInterval = interval;
+    }
+
+    private TaskManager() {
         this.lock = new Object();
         this.tasks = new ConcurrentHashMap<Long, AbstractDriveTask>();
 
@@ -50,13 +53,13 @@ public final class TaskManager
 
     /**
      * 按给定的参数集，开启任务
+     *
      * @param params
      * @param routeId
      */
-    public void run(Map params, Long routeId)
-    {
+    public void run(Map params, Long routeId) {
         // TODO: 需要检查一下是不是有冲突（终端ID及SIM卡号不能重复）
-        DrivePlan plan = RouteManager.getInstance().generate(routeId, new Date(), 5);
+        DrivePlan plan = RouteManager.getInstance().generate(routeId, new Date(), reportInterval);
 
         AbstractDriveTask task = new SimpleDriveTask(this.sequence.addAndGet(1L), routeId);
         task.init(params, plan);
@@ -65,19 +68,16 @@ public final class TaskManager
         tasks.put(task.getId(), task);
     }
 
-    public long nextIndex()
-    {
+    public long nextIndex() {
         return this.index.addAndGet(1L);
     }
 
     // 分页查找，用于列表显示运行中的行程任务状态
-    public Page<TaskInfo> find(int pageIndex, int pageSize)
-    {
+    public Page<TaskInfo> find(int pageIndex, int pageSize) {
         AbstractDriveTask[] list = tasks.values().toArray(new AbstractDriveTask[0]);
         Arrays.sort(list, SORT_COMPARATOR);
         List<TaskInfo> results = new ArrayList<TaskInfo>(pageSize);
-        for (int k = 0, i = Math.max((pageIndex - 1) * pageSize, 0); k < pageSize && i < list.length; i++, k++)
-        {
+        for (int k = 0, i = Math.max((pageIndex - 1) * pageSize, 0); k < pageSize && i < list.length; i++, k++) {
             results.add(list[i].getInfo());
         }
         Page<TaskInfo> page = new Page(pageIndex, pageSize);
@@ -87,15 +87,13 @@ public final class TaskManager
     }
 
     // 获取timeAfter时间之后的任务日志
-    public List<Log> getLogsById(Long id, long timeAfter)
-    {
+    public List<Log> getLogsById(Long id, long timeAfter) {
         AbstractDriveTask task = tasks.get(id);
         if (task != null) return task.getLogs(timeAfter);
         else return null;
     }
 
-    public TaskInfo getById(Long id)
-    {
+    public TaskInfo getById(Long id) {
         TaskInfo info = null;
         AbstractDriveTask task = tasks.get(id);
         if (task == null) return null;
@@ -103,50 +101,44 @@ public final class TaskManager
     }
 
     // 获取当前位置信息
-    public Point getCurrentPositionById(Long id)
-    {
+    public Point getCurrentPositionById(Long id) {
         AbstractDriveTask task = tasks.get(id);
         if (task == null) return null;
         else return task.getCurrentPosition();
     }
 
     // 修改车辆状态标志位
-    public void setStateFlagById(Long id, int index, boolean on)
-    {
+    public void setStateFlagById(Long id, int index, boolean on) {
         AbstractDriveTask task = tasks.get(id);
         if (task != null) task.setStateFlag(index, on);
     }
 
     // 修改报警状态标志位
-    public void setWarningFlagById(Long id, int index, boolean on)
-    {
+    public void setWarningFlagById(Long id, int index, boolean on) {
         AbstractDriveTask task = tasks.get(id);
         if (task != null) task.setWarningFlag(index, on);
     }
 
     // 任务终止
     // TODO: 什么时候把任务从map里删除掉好呢？
-    public void terminate(Long id)
-    {
+    public void terminate(Long id) {
         AbstractDriveTask task = tasks.get(id);
         if (task == null) throw new RuntimeException("无此任务或任务已终止");
-        task.execute(new Executable()
-        {
+        task.execute(new Executable() {
             @Override
-            public void execute(AbstractDriveTask driveTask)
-            {
+            public void execute(AbstractDriveTask driveTask) {
                 driveTask.terminate();
             }
         });
     }
 
     static final TaskManager instance = new TaskManager();
-    public static void init()
-    {
+
+    public static void init() {
         // ...
     }
-    public static TaskManager getInstance()
-    {
+
+    public static TaskManager getInstance() {
         return instance;
     }
 }

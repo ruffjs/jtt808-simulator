@@ -10,6 +10,7 @@ import cn.org.hentai.simulator.web.entity.ScheduleTask;
 import cn.org.hentai.simulator.web.service.RouteService;
 import cn.org.hentai.simulator.web.service.ScheduleTaskService;
 import cn.org.hentai.simulator.web.vo.Result;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -30,8 +31,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/task")
-public class TaskController
-{
+public class TaskController implements InitializingBean {
     @Autowired
     RouteService routeService;
 
@@ -39,11 +39,13 @@ public class TaskController
     String vehicleServerAddr;
 
     @Value("${vehicle-server.port}")
-    String  vehicleServerPort;
+    String vehicleServerPort;
+
+    @Value("${task.reportInterval}")
+    int reportInterval;
 
     @RequestMapping("/index")
-    public String index(Model model)
-    {
+    public String index(Model model) {
         List<Route> routes = routeService.list();
         model.addAttribute("routes", routes);
         model.addAttribute("vehicleServerAddr", vehicleServerAddr);
@@ -60,11 +62,9 @@ public class TaskController
                       @RequestParam(required = false) String simNumber,
                       @RequestParam(required = false) String mileages,
                       @RequestParam(required = false) String serverAddress,
-                      @RequestParam(required = false) String serverPort)
-    {
+                      @RequestParam(required = false) String serverPort) {
         Result result = new Result();
-        try
-        {
+        try {
             if (StringUtils.isEmpty(vehicleNumber) || vehicleNumber.matches("^[\u4e00-\u9fa5]\\w{6,7}$") == false)
                 throw new RuntimeException("请填写正确的车牌号");
 
@@ -80,8 +80,7 @@ public class TaskController
             if (simNumber.length() < 12) simNumber = ("0000000000000" + simNumber).replaceAll("^0+(\\d{12})$", "$1");
 
             int kilometers = 0;
-            if (StringUtils.isEmpty(mileages) == false)
-            {
+            if (StringUtils.isEmpty(mileages) == false) {
                 if (mileages.matches("^\\d+$")) kilometers = Integer.parseInt(mileages);
                 else throw new RuntimeException("请填写正确的初始里程数，必须为整数，如：“100”表示100公里。");
             }
@@ -89,8 +88,7 @@ public class TaskController
 
             final String sim = simNumber;
 
-            Map<String, String> params = new HashMap()
-            {
+            Map<String, String> params = new HashMap() {
                 {
                     put("vehicle.number", vehicleNumber);
                     put("device.sn", deviceSn);
@@ -103,11 +101,14 @@ public class TaskController
             };
 
             TaskManager.getInstance().run(params, routeId);
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             result.setError(ex);
         }
         return result;
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        TaskManager.setReportInterval(reportInterval);
     }
 }
