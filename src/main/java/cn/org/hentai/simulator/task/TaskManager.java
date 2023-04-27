@@ -94,7 +94,7 @@ public final class TaskManager {
         return Arrays.stream(states).anyMatch(state -> {
             if (connectionState.toString().equals(state)) {
                 return true;
-            } else return reason.toString().equals(state);
+            } else return reason != null && reason.toString().equals(state);
         });
     }
 

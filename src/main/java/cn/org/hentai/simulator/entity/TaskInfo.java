@@ -24,7 +24,7 @@ public class TaskInfo {
     private int stateFlags;
     private int warningFlags;
 
-    private ConnectionState connectionState;
+    private ConnectionState connectionState = ConnectionState.NotConnected;
 
     private ConnectionState.DisconnectReason disconnectReason;
 
