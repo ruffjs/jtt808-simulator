@@ -12,41 +12,55 @@
         <hr/>
         <div class="x-row">
             <div class="x-col-2" style="width: 100%" id="connectStates">
-                <input
-                        type="checkbox"
-                        id="NotConnected"
-                        value="NotConnected"/>
-                <label for="subscribeNews">未连接</label>
-                <input
-                        type="checkbox"
-                        id="Connected"
-                        value="Connected"/>
-                <label for="subscribeNews">连接成功</label>
-                <input
-                        type="checkbox"
-                        id="Authed"
-                        value="Authed"/>
-                <label for="subscribeNews">认证成功</label>
-                <input
-                        type="checkbox"
-                        id="TaskEnd"
-                        value="TaskEnd"/>
-                <label for="subscribeNews">连接断开（任务结束）</label>
-                <input
-                        type="checkbox"
-                        id="RegisterFailed"
-                        value="RegisterFailed"/>
-                <label for="subscribeNews">连接断开（注册失败）</label>
-                <input
-                        type="checkbox"
-                        id="ManuallyClosed"
-                        value="ManuallyClosed"/>
-                <label for="subscribeNews">连接断开（手动关闭）</label>
-                <input
-                        type="checkbox"
-                        id="Unknown"
-                        value="Unknown"/>
-                <label for="subscribeNews">连接断开（未知）</label>
+                <label for="subscribeNews">
+                    <input
+                            type="checkbox"
+                            id="NotConnected"
+                            value="NotConnected"/>
+                    未连接
+                </label>
+                <label for="subscribeNews">
+                    <input
+                            type="checkbox"
+                            id="Connected"
+                            value="Connected"/>
+                    连接成功
+                </label>
+                <label for="subscribeNews">
+                    <input
+                            type="checkbox"
+                            id="Authed"
+                            value="Authed"/>
+                    认证成功
+                </label>
+                <label for="subscribeNews">
+                    <input
+                            type="checkbox"
+                            id="TaskEnd"
+                            value="TaskEnd"/>
+                    连接断开（任务结束）
+                </label>
+                <label for="subscribeNews">
+                    <input
+                            type="checkbox"
+                            id="RegisterFailed"
+                            value="RegisterFailed"/>
+                    连接断开（注册失败）
+                </label>
+                <label for="subscribeNews">
+                    <input
+                            type="checkbox"
+                            id="ManuallyClosed"
+                            value="ManuallyClosed"/>
+                    连接断开（手动关闭）
+                </label>
+                <label for="subscribeNews">
+                    <input
+                            type="checkbox"
+                            id="Unknown"
+                            value="Unknown"/>
+                    连接断开（未知）
+                </label>
                 <button class="btn btn-blue pull-right" id="btn-search2" onclick="search2()">搜索</button>
                 <button class="btn btn-blue pull-right" id="btn-terminateAll" onclick="terminateAll()">停止全部</button>
 
@@ -61,14 +75,28 @@
 <#include "inc/footer.ftl">
 <script type="text/javascript">
 
+    const labels = $("label")
+    for (let i = 0; i < labels.length; i++) {
+        const label = $(labels[i]);
+        const child = label.children("input");
+        const id = child.prop("id");
+        label.click(() => {
+            const ch = $('#' + id);
+            const checked = ch.is(':checked');
+            ch.attr("checked", !checked);
+            alert(checked);
+        });
+    }
+
     function terminateAll() {
-        $("#btn-terminateAll").attr("disabled","true");
+        $("#btn-terminateAll").attr("disabled", "true");
         fetch("${context}/monitor/terminateAll").then(_ => {
             loadData();
             $("#btn-terminateAll").removeAttr("disabled");
             alert("停止成功")
         })
     }
+
 
     function search2() {
         const inputs = $('#connectStates').children("input");
