@@ -12,53 +12,57 @@
         <hr/>
         <div class="x-row">
             <div class="x-col-2" style="width: 100%" id="connectStates">
-                <label for="subscribeNews">
-                    <input
-                            type="checkbox"
-                            id="NotConnected"
-                            value="NotConnected"/>
-                    未连接
-                </label>
-                <label for="subscribeNews">
-                    <input
+                <input
+                        type="checkbox"
+                        id="NotConnected"
+                        value="NotConnected"/>
+                <label for="NotConnected">未连接</label>
+                 <input
                             type="checkbox"
                             id="Connected"
                             value="Connected"/>
+                <label for="Connected">
+
                     连接成功
                 </label>
-                <label for="subscribeNews">
-                    <input
+                 <input
                             type="checkbox"
                             id="Authed"
                             value="Authed"/>
+                <label for="Authed">
+
                     认证成功
                 </label>
-                <label for="subscribeNews">
-                    <input
+                <input
                             type="checkbox"
                             id="TaskEnd"
                             value="TaskEnd"/>
+                <label for="TaskEnd">
+
                     连接断开（任务结束）
                 </label>
-                <label for="subscribeNews">
-                    <input
+                 <input
                             type="checkbox"
                             id="RegisterFailed"
                             value="RegisterFailed"/>
+                <label for="RegisterFailed">
+
                     连接断开（注册失败）
                 </label>
-                <label for="subscribeNews">
-                    <input
+                <input
                             type="checkbox"
                             id="ManuallyClosed"
                             value="ManuallyClosed"/>
+                <label for="ManuallyClosed">
+
                     连接断开（手动关闭）
                 </label>
-                <label for="subscribeNews">
-                    <input
+                <input
                             type="checkbox"
                             id="Unknown"
                             value="Unknown"/>
+                <label for="Unknown">
+
                     连接断开（未知）
                 </label>
                 <button class="btn btn-blue pull-right" id="btn-search2" onclick="search2()">搜索</button>
@@ -75,17 +79,23 @@
 <#include "inc/footer.ftl">
 <script type="text/javascript">
 
-    const labels = $("label")
-    for (let i = 0; i < labels.length; i++) {
-        const label = $(labels[i]);
-        const child = label.children("input");
-        const id = child.prop("id");
-        label.click(() => {
-            const ch = $('#' + id);
-            const checked = ch.is(':checked');
-            ch.attr("checked", !checked);
-        });
-    }
+    // const labels = $("label")
+    // for (let i = 0; i < labels.length; i++) {
+    //     const label = $(labels[i]);
+    //     label.click((e) => {
+    //         const target = e.target;
+    //         if (target.tagName == "LABEL") {
+    //             const ch = $(target).children("input")
+    //             const checked = ch.prop('checked');
+    //             if(checked){
+    //                 ch.removeAttr("checked");
+    //             }else {
+    //                 ch.attr("checked", true);
+    //             }
+    //         }
+    //
+    //     });
+    // }
 
     function terminateAll() {
         $("#btn-terminateAll").attr("disabled", "true");
