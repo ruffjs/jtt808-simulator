@@ -135,7 +135,7 @@ public final class TaskManager {
     // TODO: 什么时候把任务从map里删除掉好呢？
     public void terminate(Long id) {
         AbstractDriveTask task = tasks.get(id);
-        if (task == null) throw new RuntimeException("无此任务或任务已终止");
+        if (task == null) return;
         task.execute(new Executable() {
             @Override
             public void execute(AbstractDriveTask driveTask) {
@@ -144,6 +144,16 @@ public final class TaskManager {
                 } else {
                     driveTask.terminate();
                 }
+            }
+        });
+    }
+
+    public void terminateAll() {
+        tasks.entrySet().parallelStream().forEach(it -> {
+            try {
+                terminate(it.getKey());
+            } catch (Exception e) {
+                logger.info("中止失败", e);
             }
         });
     }

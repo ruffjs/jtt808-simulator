@@ -47,7 +47,9 @@
                         id="Unknown"
                         value="Unknown"/>
                 <label for="subscribeNews">连接断开（未知）</label>
-                <a href="##" class="btn btn-sm btn-blue pull-right" onclick="search2()">搜索</a>
+                <button class="btn btn-blue pull-right" id="btn-search2" onclick="search2()">搜索</button>
+                <button class="btn btn-blue pull-right" id="btn-terminateAll" onclick="terminateAll()">停止全部</button>
+
             </div>
         </div>
         <div id="route-table"></div>
@@ -58,6 +60,15 @@
 </body>
 <#include "inc/footer.ftl">
 <script type="text/javascript">
+
+    function terminateAll() {
+        $("#btn-terminateAll").attr("disabled","true");
+        fetch("${context}/monitor/terminateAll").then(_ => {
+            loadData();
+            $("#btn-terminateAll").removeAttr("disabled");
+            alert("停止成功")
+        })
+    }
 
     function search2() {
         const inputs = $('#connectStates').children("input");
@@ -75,6 +86,7 @@
     }
 
     function loadData(qry) {
+        if (qry == null) qry = 'connectionState='
         $('#route-table').paginate({
             url: '${context}/monitor/list/json?' + qry,
             fields: [
@@ -175,14 +187,14 @@
     }
 
     function setTotalCount(v) {
-        const rct=v?.data?.recordCount
+        const rct = v?.data?.recordCount
         const cnt = rct ? rct : 0;
         $('#totalCount').text('总条数:' + cnt);
     }
 
     $(document).ready(function () {
         setCurrentMenu('list-monitor');
-        loadData('connectionState=')
+        loadData()
     });
 
 
