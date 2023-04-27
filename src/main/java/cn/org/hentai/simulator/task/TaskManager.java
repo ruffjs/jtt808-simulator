@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 /**
  * 行程任务管理器
@@ -41,6 +42,11 @@ public final class TaskManager {
 
     public static void setReportInterval(int interval) {
         reportInterval = interval;
+    }
+
+    public void resetIndexAndSeq(){
+        sequence = new AtomicLong(0);
+        index = new AtomicLong(0);
     }
 
     private TaskManager() {
@@ -156,6 +162,15 @@ public final class TaskManager {
                 logger.info("中止失败", e);
             }
         });
+    }
+
+    public void removeDisconnected() {
+        List<Long> deleteTasks = tasks.entrySet().stream()
+                .filter(it -> {
+                    AbstractDriveTask t = it.getValue();
+                    return t.info.getConnectionState() == ConnectionState.Disconnected;
+                }).map(Map.Entry::getKey).collect(Collectors.toList());
+        deleteTasks.parallelStream().forEach(it -> tasks.remove(it));
     }
 
     static final TaskManager instance = new TaskManager();

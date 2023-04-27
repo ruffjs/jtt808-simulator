@@ -66,6 +66,7 @@
                     连接断开（未知）:<span id="cnt-Unknown"></span>
                 </label>
                 <label id="totalCount">总条数：<span id="totalCnt"></span></label>
+                <button class="btn btn-blue pull-right" id="btn-removeAll" onclick="removeAll()">删除全部</button>
                 <button class="btn btn-blue pull-right" id="btn-search2" onclick="search2()">搜索</button>
                 <button class="btn btn-blue pull-right" id="btn-terminateAll" onclick="terminateAll()">停止全部</button>
 
@@ -86,6 +87,15 @@
             loadData();
             $("#btn-terminateAll").removeAttr("disabled");
             alert("停止成功")
+        })
+    }
+
+    function removeAll() {
+        $("#btn-removeAll").attr("disabled", "true");
+        fetch("${context}/monitor/removeAll").then(_ => {
+            loadData();
+            $("#btn-removeAll").removeAttr("disabled");
+            alert("删除成功")
         })
     }
 

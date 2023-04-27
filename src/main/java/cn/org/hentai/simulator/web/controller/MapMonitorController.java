@@ -106,6 +106,17 @@ public class MapMonitorController extends BaseController {
         return result;
     }
 
+    @RequestMapping("/removeAll")
+    @ResponseBody
+    public Result removeAll() {
+        Result result = new Result();
+        TaskManager instance = TaskManager.getInstance();
+        instance.terminateAll();
+        instance.removeDisconnected();
+        instance.resetIndexAndSeq();
+        return result;
+    }
+
     // TODO：状态设置
     @RequestMapping("/bit/set")
     @ResponseBody
