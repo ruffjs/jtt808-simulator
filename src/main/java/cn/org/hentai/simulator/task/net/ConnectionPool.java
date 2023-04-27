@@ -1,25 +1,20 @@
 package cn.org.hentai.simulator.task.net;
 
-import cn.org.hentai.simulator.jtt808.JTT808Decoder;
 import cn.org.hentai.simulator.jtt808.JTT808Message;
 import cn.org.hentai.simulator.task.AbstractDriveTask;
-import cn.org.hentai.simulator.task.event.EventCallable;
 import cn.org.hentai.simulator.task.event.EventDispatcher;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.util.CharsetUtil;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.net.SocketException;
-import java.nio.charset.Charset;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -52,6 +47,7 @@ public class ConnectionPool
                 protected void initChannel(SocketChannel ch) throws Exception
                 {
                     ch.pipeline()
+                            .addLast(new DelimiterBasedFrameDecoder(1024, Unpooled.copiedBuffer(new byte[]{0x7e}), Unpooled.copiedBuffer(new byte[]{0x7e, 0x7e})))
                             .addLast(new JT808MessageDecoder())
                             .addLast(new JT808MessageEncoder())
                             .addLast(new SimpleNettyHandler());
