@@ -15,38 +15,34 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/monitor/list")
-public class MonitorController extends BaseController
-{
+public class MonitorController extends BaseController {
     @Autowired
     RouteService routeService;
 
     @RequestMapping("/index")
-    public String index()
-    {
+    public String index() {
         return "monitor-list-index";
     }
 
     @RequestMapping("/json")
     @ResponseBody
-    public Result listJson(@RequestParam(defaultValue = "1") int pageIndex, @RequestParam(defaultValue = "20") int pageSize)
-    {
+    public Result listJson(
+            @RequestParam(defaultValue = "1") int pageIndex,
+            @RequestParam(defaultValue = "20") int pageSize,
+            @RequestParam("connectionState") String[] connectionState
+    ) {
         Result result = new Result();
-        try
-        {
-            Page<TaskInfo> page = TaskManager.getInstance().find(pageIndex, pageSize);
-            for (TaskInfo task : page.getList())
-            {
+        try {
+            Page<TaskInfo> page = TaskManager.getInstance().find(pageIndex, pageSize,connectionState);
+            for (TaskInfo task : page.getList()) {
                 Route route = routeService.getById(task.getRouteId());
-                if (route != null)
-                {
+                if (route != null) {
                     task.setRouteName(route.getName());
                     task.setRouteMileages(route.getMileages());
                 }
             }
             result.setData(page);
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             result.setError(ex);
         }
         return result;

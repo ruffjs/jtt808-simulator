@@ -73,8 +73,9 @@ public final class TaskManager {
     }
 
     // 分页查找，用于列表显示运行中的行程任务状态
-    public Page<TaskInfo> find(int pageIndex, int pageSize) {
-        AbstractDriveTask[] list = tasks.values().toArray(new AbstractDriveTask[0]);
+    public Page<TaskInfo> find(int pageIndex, int pageSize, String[] connectionStates) {
+        AbstractDriveTask[] list = tasks.values().stream().filter(t -> matchConnectionState(t, connectionStates))
+                .toArray(AbstractDriveTask[]::new);
         Arrays.sort(list, SORT_COMPARATOR);
         List<TaskInfo> results = new ArrayList<TaskInfo>(pageSize);
         for (int k = 0, i = Math.max((pageIndex - 1) * pageSize, 0); k < pageSize && i < list.length; i++, k++) {
@@ -84,6 +85,17 @@ public final class TaskManager {
         page.setList(results);
         page.setRecordCount(list.length);
         return page;
+    }
+
+    private boolean matchConnectionState(AbstractDriveTask t, String[] states) {
+        if (states.length == 0) return true;
+        ConnectionState connectionState = t.info.getConnectionState();
+        ConnectionState.DisconnectReason reason = t.info.getDisconnectReason();
+        return Arrays.stream(states).anyMatch(state -> {
+            if (connectionState.toString().equals(state)) {
+                return true;
+            } else return reason.toString().equals(state);
+        });
     }
 
     // 获取timeAfter时间之后的任务日志
@@ -127,7 +139,11 @@ public final class TaskManager {
         task.execute(new Executable() {
             @Override
             public void execute(AbstractDriveTask driveTask) {
-                driveTask.terminate();
+                if (driveTask instanceof SimpleDriveTask) {
+                    ((SimpleDriveTask) driveTask).terminate(ConnectionState.DisconnectReason.ManuallyClosed);
+                } else {
+                    driveTask.terminate();
+                }
             }
         });
     }

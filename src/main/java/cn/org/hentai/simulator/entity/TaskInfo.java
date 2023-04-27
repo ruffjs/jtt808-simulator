@@ -1,13 +1,12 @@
 package cn.org.hentai.simulator.entity;
 
-import java.util.Date;
-import java.util.List;
+import cn.org.hentai.simulator.task.ConnectionState;
+
 
 /**
  * Created by houcheng when 2018/11/29.
  */
-public class TaskInfo
-{
+public class TaskInfo {
     private long id;
     private long routeId;
     private String routeName;
@@ -25,233 +24,212 @@ public class TaskInfo
     private int stateFlags;
     private int warningFlags;
 
-    public TaskInfo withSimNumber(String sim)
-    {
+    private ConnectionState connectionState;
+
+    private ConnectionState.DisconnectReason disconnectReason;
+
+    public TaskInfo withSimNumber(String sim) {
         setSimNumber(sim);
         return this;
     }
 
-    public TaskInfo withLatitude(double lat)
-    {
+    public TaskInfo withLatitude(double lat) {
         setLatitude(lat);
         return this;
     }
 
-    public TaskInfo withLongitude(double lng)
-    {
+    public TaskInfo withLongitude(double lng) {
         setLongitude(lng);
         return this;
     }
 
-    public TaskInfo withStartTime(long stime)
-    {
+    public TaskInfo withStartTime(long stime) {
         setStartTime(stime);
         return this;
     }
 
-    public TaskInfo withState(String state)
-    {
+    public TaskInfo withState(String state) {
         setState(state);
         return this;
     }
 
-    public TaskInfo withDeviceSn(String sn)
-    {
+    public TaskInfo withDeviceSn(String sn) {
         setDeviceSn(sn);
         return this;
     }
 
-    public TaskInfo withVehicleNumber(String vehicleNumber)
-    {
+    public TaskInfo withVehicleNumber(String vehicleNumber) {
         setVehicleNumber(vehicleNumber);
         return this;
     }
 
-    public TaskInfo withRouteMileages(int routeMileages)
-    {
+    public TaskInfo withRouteMileages(int routeMileages) {
         setRouteMileages(routeMileages);
         return this;
     }
 
-    public TaskInfo withRouteName(String name)
-    {
+    public TaskInfo withRouteName(String name) {
         setRouteName(name);
         return this;
     }
 
-    public TaskInfo withRouteId(long routeId)
-    {
+    public TaskInfo withRouteId(long routeId) {
         setRouteId(routeId);
         return this;
     }
 
-    public TaskInfo withId(long id)
-    {
+    public TaskInfo withId(long id) {
         setId(id);
         return this;
     }
 
-    public TaskInfo withReportTime(long time)
-    {
+    public TaskInfo withReportTime(long time) {
         setReportTime(time);
         return this;
     }
 
-    public TaskInfo withStateFlags(int flags)
-    {
+    public TaskInfo withStateFlags(int flags) {
         setStateFlags(flags);
         return this;
     }
 
-    public TaskInfo withWarningFlags(int flags)
-    {
+    public TaskInfo withWarningFlags(int flags) {
         setWarningFlags(flags);
         return this;
     }
 
-    public int getStateFlags()
-    {
+    public int getStateFlags() {
         return stateFlags;
     }
 
-    public void setStateFlags(int stateFlags)
-    {
+    public void setStateFlags(int stateFlags) {
         this.stateFlags = stateFlags;
     }
 
-    public int getWarningFlags()
-    {
+    public int getWarningFlags() {
         return warningFlags;
     }
 
-    public void setWarningFlags(int warningFlags)
-    {
+    public void setWarningFlags(int warningFlags) {
         this.warningFlags = warningFlags;
     }
 
-    public long getReportTime()
-    {
+    public long getReportTime() {
         return reportTime;
     }
 
-    public void setReportTime(long reportTime)
-    {
+    public void setReportTime(long reportTime) {
         this.reportTime = reportTime;
     }
 
-    public long getId()
-    {
+    public long getId() {
         return id;
     }
 
-    public void setId(long id)
-    {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public long getRouteId()
-    {
+    public long getRouteId() {
         return routeId;
     }
 
-    public void setRouteId(long routeId)
-    {
+    public void setRouteId(long routeId) {
         this.routeId = routeId;
     }
 
-    public String getRouteName()
-    {
+    public String getRouteName() {
         return routeName;
     }
 
-    public void setRouteName(String routeName)
-    {
+    public void setRouteName(String routeName) {
         this.routeName = routeName;
     }
 
-    public int getRouteMileages()
-    {
+    public int getRouteMileages() {
         return routeMileages;
     }
 
-    public void setRouteMileages(int routeMileages)
-    {
+    public void setRouteMileages(int routeMileages) {
         this.routeMileages = routeMileages;
     }
 
-    public String getVehicleNumber()
-    {
+    public String getVehicleNumber() {
         return vehicleNumber;
     }
 
-    public void setVehicleNumber(String vehicleNumber)
-    {
+    public void setVehicleNumber(String vehicleNumber) {
         this.vehicleNumber = vehicleNumber;
     }
 
-    public String getDeviceSn()
-    {
+    public String getDeviceSn() {
         return deviceSn;
     }
 
-    public void setDeviceSn(String deviceSn)
-    {
+    public void setDeviceSn(String deviceSn) {
         this.deviceSn = deviceSn;
     }
 
-    public String getSimNumber()
-    {
+    public String getSimNumber() {
         return simNumber;
     }
 
-    public void setSimNumber(String simNumber)
-    {
+    public void setSimNumber(String simNumber) {
         this.simNumber = simNumber;
     }
 
-    public String getState()
-    {
+    public String getState() {
         return state;
     }
 
-    public void setState(String state)
-    {
+    public void setState(String state) {
         this.state = state;
     }
 
-    public long getStartTime()
-    {
+    public long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(long startTime)
-    {
+    public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
-    public double getLongitude()
-    {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude)
-    {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public double getLatitude()
-    {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude)
-    {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
+
+    public ConnectionState getConnectionState() {
+        return connectionState;
+    }
+
+    public void setConnectionState(ConnectionState connectionState) {
+        this.connectionState = connectionState;
+    }
+
+
+    public ConnectionState.DisconnectReason getDisconnectReason() {
+        return disconnectReason;
+    }
+
+    public void setDisconnectReason(ConnectionState.DisconnectReason disconnectReason) {
+        this.disconnectReason = disconnectReason;
+    }
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "TaskInfo{" +
                 "id=" + id +
                 ", routeId=" + routeId +
@@ -267,6 +245,7 @@ public class TaskInfo
                 ", reportTime=" + reportTime +
                 ", stateFlags=" + stateFlags +
                 ", warningFlags=" + warningFlags +
+                ", connectionState=" + connectionState +
                 '}';
     }
 }
