@@ -88,6 +88,7 @@
 
         $('#btn-run').click(function()
         {
+            $("#btn-run").attr("disabled","true");
             var idList = [];
             $('#routeId option:selected').each(function()
             {
@@ -107,6 +108,7 @@
             {
                 if (result.error && result.error.code) return toastr('error', result.error.reason);
                 else toastr('success', '启动成功');
+                setTimeout(()=>$("#btn-run").removeAttr("disabled"),100)
             });
         });
     });
