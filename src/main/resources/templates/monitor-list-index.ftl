@@ -16,55 +16,56 @@
                         type="checkbox"
                         id="NotConnected"
                         value="NotConnected"/>
-                <label for="NotConnected">未连接</label>
-                 <input
-                            type="checkbox"
-                            id="Connected"
-                            value="Connected"/>
-                <label for="Connected">
+                <label id="label-NotConnected" for="NotConnected">未连接:<span id="cnt-NotConnected"></span> </label>
+                <input
+                        type="checkbox"
+                        id="Connected"
+                        value="Connected"/>
+                <label id="label-Connected" for="Connected">
 
-                    连接成功
-                </label>
-                 <input
-                            type="checkbox"
-                            id="Authed"
-                            value="Authed"/>
-                <label for="Authed">
-
-                    认证成功
+                    连接成功:<span id="cnt-Connected"></span>
                 </label>
                 <input
-                            type="checkbox"
-                            id="TaskEnd"
-                            value="TaskEnd"/>
-                <label for="TaskEnd">
+                        type="checkbox"
+                        id="Authed"
+                        value="Authed"/>
+                <label id="" for="Authed">
 
-                    连接断开（任务结束）
+                    认证成功:<span id="cnt-Authed"></span>
                 </label>
-                 <input
-                            type="checkbox"
-                            id="RegisterFailed"
-                            value="RegisterFailed"/>
+                <input
+                        type="checkbox"
+                        id="TaskEnd"
+                        value="TaskEnd"/>
+                <label id=label-TaskEnd" for="TaskEnd">
+
+                    连接断开（任务结束）:<span id="cnt-TaskEnd"></span>
+                </label>
+                <input
+                        type="checkbox"
+                        id="RegisterFailed"
+                        value="RegisterFailed"/>
                 <label for="RegisterFailed">
 
-                    连接断开（注册失败）
+                    连接断开（注册失败）:<span id="cnt-RegisterFailed"></span>
                 </label>
                 <input
-                            type="checkbox"
-                            id="ManuallyClosed"
-                            value="ManuallyClosed"/>
+                        type="checkbox"
+                        id="ManuallyClosed"
+                        value="ManuallyClosed"/>
                 <label for="ManuallyClosed">
 
-                    连接断开（手动关闭）
+                    连接断开（手动关闭）:<span id="cnt-ManuallyClosed"></span>
                 </label>
                 <input
-                            type="checkbox"
-                            id="Unknown"
-                            value="Unknown"/>
+                        type="checkbox"
+                        id="Unknown"
+                        value="Unknown"/>
                 <label for="Unknown">
 
-                    连接断开（未知）
+                    连接断开（未知）:<span id="cnt-Unknown"></span>
                 </label>
+                <label id="totalCount">总条数：<span id="totalCnt"></span></label>
                 <button class="btn btn-blue pull-right" id="btn-search2" onclick="search2()">搜索</button>
                 <button class="btn btn-blue pull-right" id="btn-terminateAll" onclick="terminateAll()">停止全部</button>
 
@@ -72,30 +73,12 @@
         </div>
         <div id="route-table"></div>
         <ul class="pagination"></ul>
-        <span id="totalCount">总条数：1</span>
+
     </div>
 </div>
 </body>
 <#include "inc/footer.ftl">
 <script type="text/javascript">
-
-    // const labels = $("label")
-    // for (let i = 0; i < labels.length; i++) {
-    //     const label = $(labels[i]);
-    //     label.click((e) => {
-    //         const target = e.target;
-    //         if (target.tagName == "LABEL") {
-    //             const ch = $(target).children("input")
-    //             const checked = ch.prop('checked');
-    //             if(checked){
-    //                 ch.removeAttr("checked");
-    //             }else {
-    //                 ch.attr("checked", true);
-    //             }
-    //         }
-    //
-    //     });
-    // }
 
     function terminateAll() {
         $("#btn-terminateAll").attr("disabled", "true");
@@ -220,13 +203,31 @@
                 },
             ]
         });
-        fetch('${context}/monitor/list/json?' + qry).then(resp => resp.json().then(v => setTotalCount(v)))
+        fetch('${context}/monitor/list/json?pageIndex=1&pageSize=99999&connectionState=').then(resp => resp.json().then(v => setTotalCount(v)))
     }
 
     function setTotalCount(v) {
+        const spanList = $("span");
+        for (let i = 0; i < spanList.length; i++) {
+            $(spanList[i]).text(0)
+        }
         const rct = v?.data?.recordCount
         const cnt = rct ? rct : 0;
-        $('#totalCount').text('总条数:' + cnt);
+        $('#totalCnt').text(cnt);
+        const list = v.data.list
+        const map = new Map();
+        list.forEach((d) => {
+            let key = d.connectionState
+            if (key == "Disconnected") {
+                key = d.disconnectReason
+            }
+            let c = map.get(key)
+            c = c ? c : 0;
+            map.set(key, c + 1)
+        })
+        map.forEach((v, key) => {
+            $("#cnt-" + key).text(v)
+        })
     }
 
     $(document).ready(function () {
