@@ -84,7 +84,6 @@
             const ch = $('#' + id);
             const checked = ch.is(':checked');
             ch.attr("checked", !checked);
-            alert(checked);
         });
     }
 
