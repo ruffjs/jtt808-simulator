@@ -2,6 +2,7 @@ package cn.org.hentai.simulator.jtt808;
 
 import cn.org.hentai.simulator.jtt808.util.BitOperator;
 import cn.org.hentai.simulator.jtt808.util.MsgParseUtils;
+import cn.org.hentai.simulator.util.ByteUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +30,10 @@ public final class JTT808Decoder
         int calculatedCheckSum = BitOperator.getCheckSum4JT808(data, 0, data.length - 1);
         pData.setCheckSum(checkSumInPkg);
         if (checkSumInPkg != calculatedCheckSum) {
-            log.error("检验码不一致,msgid:{},pkg:{},calculated:{}", msgHeader.getMsgId(), checkSumInPkg, calculatedCheckSum);
+            String scHex = String.format("%02x", checkSumInPkg);
+            String calHex = String.format("%02x", calculatedCheckSum);
+            String dataHex = ByteUtils.bytesToHex(data);
+            log.error("检验码不一致,msgId:{}, pkg: {}, calculated: {}, data: {}", msgHeader.getMsgId(), scHex, calHex, dataHex);
         }
         return pData;
     }
